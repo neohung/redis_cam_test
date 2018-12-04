@@ -7,8 +7,11 @@ import base64
 from io import BytesIO
 from PIL import Image
 import numpy as np
+import datetime
+import requests
 
 try:
+  now = time.time()
   r = redis.from_url('redis://:z******6@redis-15901.c1.asia-northeast1-1.gce.cloud.redislabs.com:15901/0')
   fps=30
   img_param = [int(cv2.IMWRITE_JPEG_QUALITY), fps]
@@ -36,7 +39,13 @@ try:
       #print "grab %d" % ret
     #if cv2.waitKey(1) & 0xFF == ord('q'):
     #  break
-    time.sleep(10)
+    time.sleep(30)
+    dt = time.time() - now
+    if (dt > 20*60):
+      #print("dt=%d" % (time.time()))
+      now = time.time()
+      response = requests.get('https://n****t.herokuapp.com')
+      
   cap.release()
   
 except Exception as e:
